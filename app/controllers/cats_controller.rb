@@ -1,12 +1,45 @@
 class CatsController < ApplicationController
 
   def index
-    @cats = Cats.all
+    @cats = Cat.all
     render :index
   end
 
   def show
-    @cats.find(params[:name])
+    @cat = Cat.find(params[:id])
     render :show
+  end
+
+  def new
+    render :new
+  end
+
+  def create
+    @cat = Cat.new(cat_params)
+    if @cat.save
+      redirect_to cat_path(@cat)
+    else
+      render :new
+    end
+  end
+
+  def edit
+    @cat = Cat.find(params[:id])
+    render :edit
+  end
+
+  def update
+    @cat = Cat.new(cat_params)
+    if @cat.update_attributes(cat_params)
+      redirect_to cat_path(@cat)
+    else
+      redirect_to :new
+    end
+  end
+
+  private
+
+  def cat_params
+    params.require(:cat).permit(:color, :name, :sex, :birth_date, :description)
   end
 end
